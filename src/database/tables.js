@@ -9,7 +9,9 @@ async function dropTables() {
 
 async function createTables() {
   await db.connect();
-  await db.query("CREATE TABLE name_table(properties)");
-  console.log("Tabela Criada");
+  await db.query(
+    "CREATE TABLE restaurants (Id SERIAL PRIMARY KEY, name VARCHAR(50), location VARCHAR(50), price_range INT)"
+  );
+  console.log("Table created");
 }
 createTables();
