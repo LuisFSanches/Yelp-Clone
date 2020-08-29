@@ -9,3 +9,4 @@ const pool = new Pool({
 });
 
 module.exports = pool;
+//process.env.DATABASE_PASSWORD

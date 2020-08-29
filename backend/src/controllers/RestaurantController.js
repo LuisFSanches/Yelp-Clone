@@ -32,7 +32,7 @@ module.exports = {
     if (location === "" || location === undefined) {
       location = data.rows[0].location;
     }
-    if (price === undefined || price === undefined) {
+    if (price === "" || price === undefined) {
       price = data.rows[0].price_range;
     }
     console.log(price);
