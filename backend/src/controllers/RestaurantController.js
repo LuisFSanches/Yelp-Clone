@@ -2,7 +2,9 @@ const db = require("../database/config/database.js");
 
 module.exports = {
   async index(req, res) {
-    const data = await db.query("SELECT * FROM restaurants");
+    const data = await db.query(
+      "SELECT * FROM restaurants left JOIN (select restaurant_id, COUNT(*), TRUNC(AVG(rating),1) as average_rating from reviews group by restaurant_id) reviews on restaurants.id = reviews.restaurant_id"
+    );
     return res.json(data.rows);
   },
 

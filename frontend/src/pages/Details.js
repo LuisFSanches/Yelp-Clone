@@ -1,9 +1,18 @@
 import React from "react";
 
-export default function Details() {
+import Reviews from "../components/Reviews.js";
+import AddReview from "../components/AddReview.js";
+import TitleReview from "../components/TitleReview.js";
+
+const Details = () => {
   return (
-    <div>
-      <h1>Details</h1>
-    </div>
+    <>
+      <div className="mt-3">
+        <Reviews />
+        <TitleReview />
+        <AddReview />
+      </div>
+    </>
   );
-}
+};
+export default Details;

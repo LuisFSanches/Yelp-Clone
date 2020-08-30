@@ -1,21 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { api } from "../services/api.js";
-import { Link } from "react-router-dom";
+import StarRating from "./StarRating";
+import { withRouter } from "react-router-dom";
 
-export default function RestaurantList() {
+const RestaurantList = ({ history }) => {
   const [restaurants, setRestaurants] = useState([""]);
+
   useEffect(() => {
     const getData = async () => {
       const response = await api.get("/");
+      console.log(response.data);
       setRestaurants(response.data);
     };
     getData();
   }, []);
 
-  const deleteRestaurant = async (id) => {
+  const updateRestaurant = async (e, id) => {
+    e.stopPropagation();
+    history.push(`/restaurants/${id}/update`);
+  };
+
+  const deleteRestaurant = async (e, id) => {
+    e.stopPropagation();
     await api.delete(`/delete/${id}`);
     const response = await api.get("/");
     return setRestaurants(response.data);
+  };
+
+  const onClickDetails = async (id) => {
+    history.push(`/restaurants/${id}`);
   };
 
   return (
@@ -34,22 +47,28 @@ export default function RestaurantList() {
         <tbody>
           {restaurants.map((restaurant) => {
             return (
-              <tr key={restaurant.id}>
+              <tr
+                key={restaurant.id}
+                onClick={() => onClickDetails(restaurant.id)}
+              >
                 <td>{restaurant.name}</td>
                 <td>{restaurant.location}</td>
                 <td>{"$".repeat(restaurant.price_range)}</td>
-                <td>Rating</td>
                 <td>
-                  <button className="btn btn-warning">
-                    <Link to={`/restaurants/${restaurant.id}/update`}>
-                      Update
-                    </Link>
+                  <StarRating rating={restaurant.average_rating} />
+                </td>
+                <td>
+                  <button
+                    className="btn btn-warning"
+                    onClick={(e) => updateRestaurant(e, restaurant.id)}
+                  >
+                    Update
                   </button>
                 </td>
                 <td>
                   <button
                     className="btn btn-danger"
-                    onClick={() => deleteRestaurant(restaurant.id)}
+                    onClick={(e) => deleteRestaurant(e, restaurant.id)}
                   >
                     Delete
                   </button>
@@ -61,4 +80,5 @@ export default function RestaurantList() {
       </table>
     </div>
   );
-}
+};
+export default withRouter(RestaurantList);

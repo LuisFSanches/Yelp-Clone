@@ -1,13 +1,24 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, withRouter } from "react-router-dom";
 import { api } from "../services/api.js";
 
-const UpdateRestaurant = () => {
+const UpdateRestaurant = ({ history }) => {
   const { id } = useParams();
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [price_range, setPrice] = useState("");
   const [message, setMessage] = useState();
+
+  const [name_from_db, setName_from_db] = useState("");
+
+  useEffect(() => {
+    const getData = async () => {
+      const response = await api.get(`/restaurant/${id}`);
+
+      setName_from_db(response.data.name);
+    };
+    getData();
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,11 +32,14 @@ const UpdateRestaurant = () => {
     } catch (err) {
       console.log(err);
     }
+    setTimeout(() => {
+      history.push("/");
+    }, 2000);
   };
 
   return (
     <div>
-      <h2></h2>
+      <h2>{name_from_db}</h2>
       <form action="" onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="name">Name</label>
@@ -68,4 +82,4 @@ const UpdateRestaurant = () => {
     </div>
   );
 };
-export default UpdateRestaurant;
+export default withRouter(UpdateRestaurant);
